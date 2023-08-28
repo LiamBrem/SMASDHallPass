@@ -4,33 +4,39 @@ import sqlite3
 app = Flask(__name__)
 
 
+# connects to db
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
 
+
+# Returns a list of all the names from the DB as strings - used for search functionality
 def getListOfNamesFromDB():
     conn = get_db_connection()
-    students = conn.execute('SELECT * FROM students').fetchall()
+    students = conn.execute("SELECT * FROM students").fetchall()
     conn.close()
-    #print(names[1]["student"])
     listOfNames = []
     for name in students:
         listOfNames.append(name["studentName"])
 
     return listOfNames
 
-@app.route('/send_name', methods=['POST'])
+
+# This recieves the name that the student clicks on from the JS studentSearchScript
+@app.route("/send_name", methods=["POST"])
 def send_name():
     data = request.json
-    received_name = data.get('name')
+    received_name = data.get("name")
 
     print("NAME: " + received_name)
-    
+
     # Process the name as needed
 
     return jsonify({"message": "Name received successfully"})
 
+
+# index
 @app.route("/")
 def index():
     listOfNames = getListOfNamesFromDB()
