@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import sqlite3
 
 app = Flask(__name__)
@@ -19,6 +19,17 @@ def getListOfNamesFromDB():
         listOfNames.append(name["studentName"])
 
     return listOfNames
+
+@app.route('/send_name', methods=['POST'])
+def send_name():
+    data = request.json
+    received_name = data.get('name')
+
+    print("NAME: " + received_name)
+    
+    # Process the name as needed
+
+    return jsonify({"message": "Name received successfully"})
 
 @app.route("/")
 def index():

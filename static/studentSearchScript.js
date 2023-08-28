@@ -23,8 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedStudent = student; // Update the variable
                 selectedStudentField.value = selectedStudent;
                 console.log(selectedStudent)
+
+
+                // makes an ajax request to send the variable to a flask route
+                $.ajax({
+                    type: "POST",
+                    url: "/send_name",
+                    data: JSON.stringify({ name: selectedStudent }),
+                    contentType: "application/json",
+                    success: function(response) {
+                        console.log("Variable sent successfully!");
+                    }
+                });
+
+
             });
             studentList.appendChild(li);
         });
     });
 });
+
+
