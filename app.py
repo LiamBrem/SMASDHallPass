@@ -11,12 +11,12 @@ def get_db_connection():
 
 def getListOfNamesFromDB():
     conn = get_db_connection()
-    names = conn.execute('SELECT * FROM students').fetchall()
+    students = conn.execute('SELECT * FROM students').fetchall()
     conn.close()
     #print(names[1]["student"])
     listOfNames = []
-    for name in names:
-        listOfNames.append(name["student"])
+    for name in students:
+        listOfNames.append(name["studentName"])
 
     return listOfNames
 
