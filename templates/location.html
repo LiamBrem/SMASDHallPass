@@ -9,6 +9,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    
+    <h2>Where Are You Going To?</h2>
+    <div class="location-buttons">
+        <button id="bathroom">Bathroom</button>
+        <button id="nurse">Nurse's Office</button>
+        <button id="main">Main Office</button>
+        <button id="teacher">Other Teacher</button>
+        <button id="other">Other Location</button>
+
+        <script src="{{ url_for('static', filename='locationSelectScript.js') }}"></script>
+
+    </div>
 </body>
 </html>
