@@ -36,12 +36,15 @@ def send_name():
     return jsonify({"message": "Name received successfully"})
 
 
+@app.route("location_page")
+def location_page():
+    return render_template('location.html')
+
+
 # index
 @app.route("/")
 def index():
     listOfNames = getListOfNamesFromDB()
-    print(listOfNames)
-
     return render_template("index.html", listOfNames=listOfNames)
 
 

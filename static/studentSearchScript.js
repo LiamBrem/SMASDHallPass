@@ -37,6 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
 
+
+                window.location.href = '/location_page';
+
+
             });
             studentList.appendChild(li);
         });
