@@ -1,6 +1,12 @@
 # Database
 *.db
 
+# Environments
+venv/
+bin/
+lib/
+/pyvenv.cfg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -147,11 +153,6 @@ target/
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
 
-# Environments
-venv/
-bin/
-lib/
-/pyvenv.cfg
 
 
 
