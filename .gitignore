@@ -149,6 +149,9 @@ __pypackages__/
 
 # Environments
 venv/
+bin/
+lib/
+/pyvenv.cfg
 
 
 
