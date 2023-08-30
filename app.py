@@ -62,13 +62,15 @@ def add_location():
 
         # Update the student's location in the database
         cursor.execute(
-            "INSERT INTO student_history (student_id, locationGoingTo, timeLeft) VALUES (?, ?, ?)",
-            (student[0], received_location, current_time),
+            "INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)",
+            (student[0], received_location, current_time, "Brem"),
         )
         conn.commit()
 
+        session.clear()
         return "Location added successfully."
     else:
+        session.clear()
         return "Student not found."
 
 
@@ -88,6 +90,10 @@ def index():
     listOfNames = getListOfNamesFromDB()
     return render_template("index.html", listOfNames=listOfNames)
 
+@app.route("/teacher/<teacherName>")
+def studentIndex(teacherName):
+    return str(teacherName)
+
 
 def testFunction(student_id):
     conn, cursor = get_db_connection()
@@ -95,7 +101,7 @@ def testFunction(student_id):
     # Query student_history with student names
     cursor.execute(
         """
-        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName
+        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName, sh.teacher
         FROM student_history sh
         INNER JOIN students s ON sh.student_id = s.id
         WHERE sh.student_id = ?
@@ -109,9 +115,9 @@ def testFunction(student_id):
     if history_rows:
         print(f"Student History for Student ID {student_id}:")
         for row in history_rows:
-            history_id, location, time, student_name = row
+            history_id, location, time, student_name, teacher = row
             print(
-                f"History ID: {history_id}, Student Name: {student_name}, Location: {location}, Time: {time}"
+                f"History ID: {history_id}, Student Name: {student_name}, Location: {location}, Time: {time}, Teacher: {teacher}"
             )
     else:
         print("No history found for the student.")

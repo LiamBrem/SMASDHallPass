@@ -24,7 +24,7 @@ for name in listOfNames:
 
     # Insert initial history data for the student
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    cur.execute("INSERT INTO student_history (student_id, locationGoingTo, timeLeft) VALUES (?, ?, ?)", (student_id, 'init', current_time))
+    cur.execute("INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)", (student_id, 'init', current_time, 'init'))
 
 
 

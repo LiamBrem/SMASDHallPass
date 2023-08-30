@@ -13,5 +13,6 @@ CREATE TABLE student_history (
     student_id INTEGER NOT NULL,
     locationGoingTo TEXT NOT NULL,
     timeLeft DATETIME NOT NULL,
+    teacher TEXT NOT NULL,
     FOREIGN KEY (student_id) REFERENCES students(id)
 );
