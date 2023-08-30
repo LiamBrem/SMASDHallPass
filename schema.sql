@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS student_history;
 
 -- Define the students table
 CREATE TABLE students (
