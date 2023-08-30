@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 import sqlite3
-import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'asdf'  # Used to encrypt session data
@@ -59,9 +59,13 @@ def add_location():
     student = session.get('student')
 
     if student:
+        #current timestamp
+        current_time = datetime.now()
+
         # Update the student's location in the database
-        cursor.execute("UPDATE students SET locationGoingTo = ? WHERE id = ?", (received_location, student[0]))
+        cursor.execute("INSERT INTO student_history (student_id, locationGoingTo, timeLeft) VALUES (?, ?, ?)", (student[0], received_location, current_time))
         conn.commit()
+
         return "Location added successfully."
     else:
         return "Student not found."
@@ -77,6 +81,32 @@ def location_page():
 def index():
     listOfNames = getListOfNamesFromDB()
     return render_template("index.html", listOfNames=listOfNames)
+
+
+def testFunction():
+    conn, cursor = get_db_connection()
+    student_id = 1
+
+    # Query student_history with student names
+    cursor.execute("""
+        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName
+        FROM student_history sh
+        INNER JOIN students s ON sh.student_id = s.id
+        WHERE sh.student_id = ?
+    """, (student_id,))
+    history_rows = cursor.fetchall()
+
+    conn.close()
+
+    if history_rows:
+        print(f"Student History for Student ID {student_id}:")
+        for row in history_rows:
+            history_id, location, time, student_name = row
+            print(f"History ID: {history_id}, Student Name: {student_name}, Location: {location}, Time: {time}")
+    else:
+        print("No history found for the student.")
+
+
 
 
 if __name__ == "__main__":

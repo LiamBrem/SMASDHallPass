@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 
 connection = sqlite3.connect("database.db")
@@ -9,17 +10,22 @@ with open("schema.sql") as f:
 
 cur = connection.cursor()
 
-File_object = open(r"allStudents.txt", "r")  # r stands for read only
+# Read student names from the file
+with open("allStudents.txt", "r") as file:
+    listOfNames = file.readlines()
 
-listOfNames = File_object.readlines()
+# Remove newline characters and insert each name into the students table
+for name in listOfNames:
+    student_name = name.strip()  # Remove newline characters
 
-# Loop through the strings and remove the newline character & inserts each name from text file into db
-for i in range(len(listOfNames)):
-    listOfNames[i] = listOfNames[i][:-1]
+    # Insert the student name into the students table
+    cur.execute("INSERT INTO students (studentName) VALUES (?)", (student_name,))
+    student_id = cur.lastrowid  # Get the ID of the inserted student
 
-    #The first location and time for students is "init" and "2023-01-01 00:00:00"
-    cur.execute("INSERT INTO students (studentName, locationGoingTo, timeLeft) VALUES ('" + listOfNames[i] + "', 'init', '2023-08-08 00:00:00')")
-File_object.close()
+    # Insert initial history data for the student
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    cur.execute("INSERT INTO student_history (student_id, locationGoingTo, timeLeft) VALUES (?, ?, ?)", (student_id, 'init', current_time))
+
 
 
 connection.commit()
