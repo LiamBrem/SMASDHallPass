@@ -9,22 +9,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listeners to the buttons
     bathroomButton.addEventListener('click', function() {
         sendLocation('bathroom');
+        window.location.href = '/end_page';
     });
 
     nurseButton.addEventListener('click', function() {
         sendLocation('nurse');
+        window.location.href = '/end_page';
     });
 
     officeButton.addEventListener('click', function() {
         sendLocation('main');
+        window.location.href = '/end_page';
     });
 
     teacherButton.addEventListener('click', function() {
         sendLocation('teacher');
+        window.location.href = '/end_page';
     });
 
     otherButton.addEventListener('click', function() {
         sendLocation('other');
+        window.location.href = '/end_page';
     });
 
     // Function to send location to the backend
