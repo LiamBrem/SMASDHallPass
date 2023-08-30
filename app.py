@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 import sqlite3
+import time
 
 app = Flask(__name__)
 app.secret_key = 'asdf'  # Used to encrypt session data
