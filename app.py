@@ -3,7 +3,7 @@ import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "asdf"  # Used to encrypt session data
+app.secret_key = "asdf"  # Needed to encrypt session data
 
 
 # connects to db -> returns conn, cursor
@@ -14,7 +14,7 @@ def get_db_connection():
     return conn, cursor
 
 
-# Returns a list of all the names from the DB as strings - used for search functionality
+# Returns a list of all the names from the DB as strings -> used for search functionality, passed in to index.html
 def getListOfNamesFromDB():
     conn, cursor = get_db_connection()
     students = conn.execute("SELECT * FROM students").fetchall()
@@ -30,13 +30,13 @@ def getListOfNamesFromDB():
 @app.route("/send_name", methods=["POST"])
 def send_name():
     data = request.json
-    received_name = data.get("name")
+    received_name = data.get("name") # Name received from frontend
 
     conn, cursor = get_db_connection()
     cursor.execute("SELECT * FROM students WHERE studentName = ?", (received_name,))
     student = cursor.fetchone()
 
-    if student:
+    if student: # If student exists in the DB
         # stores student data in session
         session["student"] = student
         return "success"
@@ -45,6 +45,8 @@ def send_name():
         return "Student not found."
 
 
+
+# Receives the selected location from the student 
 @app.route("/add_location", methods=["POST"])
 def add_location():
     conn, cursor = get_db_connection()
@@ -52,16 +54,18 @@ def add_location():
     data = request.json
     received_location = data.get("location")
 
-    print(received_location)
-
+    # Gets student and teacher from the session
     student = session.get("student")
     teacher = session.get("teacherName")
+
+    if teacher == None:
+        teacher = "init"
 
     if student:
         # current timestamp
         current_time = datetime.now()
 
-        # Update the student's location in the database
+        # Update the student's location, time they left, and what teacher in the database
         cursor.execute(
             "INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)",
             (student[0], received_location, current_time, teacher),
@@ -75,11 +79,13 @@ def add_location():
         return "Student not found."
 
 
+# Select Location
 @app.route("/location_page")
 def location_page():
     return render_template("location.html")
 
 
+# Thank you page
 @app.route("/end_page")
 def end_page():
     return render_template("endPage.html")
@@ -91,11 +97,11 @@ def index():
     listOfNames = getListOfNamesFromDB()
     return render_template("index.html", listOfNames=listOfNames)
 
+
+# index with teacher
 @app.route("/teacher/<teacherName>")
 def studentIndex(teacherName):
-
-
-    session['teacherName'] = teacherName
+    session['teacherName'] = teacherName # stores teacher from URL in a session
 
     listOfNames = getListOfNamesFromDB()
     return render_template("index.html", listOfNames=listOfNames)
