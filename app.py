@@ -58,8 +58,6 @@ def add_location():
     student = session.get("student")
     teacher = session.get("teacherName")
 
-    teacher = "init" if teacher is None else teacher
-
     if student:
         # current timestamp
         current_time = datetime.now()
@@ -88,6 +86,11 @@ def location_page():
 @app.route("/end_page")
 def end_page():
     return render_template("endPage.html")
+
+# Admin Page
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
 
 # index
