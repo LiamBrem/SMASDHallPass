@@ -11,7 +11,7 @@ with open("schema.sql") as f:
 cur = connection.cursor()
 
 # Read student names from the file
-with open("allStudents.txt", "r") as file:
+with open("names/allStudents.txt", "r") as file:
     listOfNames = file.readlines()
 
 # Remove newline characters and insert each name into the students table
