@@ -38,7 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 */
 
+                var studentData = {"name":"liam", "age": 18, "activityHistory": "bathroom"} // Call a function to retrieve student data
+                updateStudentProfile(studentData);
+
+
             });
+
+            function updateStudentProfile(studentData) {
+                // Update the student profile section with the retrieved data
+                $('.student-profile').html('<h2>' + studentData.name + '</h2><p>Age: ' + studentData.age + '</p><p>Activity History: ' + studentData.activityHistory + '</p>');
+            }
+
+
+
             studentList.appendChild(li);
         });
     });

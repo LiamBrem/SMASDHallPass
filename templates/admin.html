@@ -11,12 +11,19 @@
 <body>
     <script src="{{ url_for('static', filename='admin.js') }}"></script>
 
+    <div class="main">
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Type student name...">
+            <ul id="studentList"></ul>
+            <input type="text" id="selectedStudent" placeholder="Selected Student" readonly hidden=hidden>
+        </div>
 
-    <div class="search">
-        <input type="text" id="searchInput" placeholder="Type student name...">
-        <ul id="studentList"></ul>
-        <input type="text" id="selectedStudent" placeholder="Selected Student" readonly hidden=hidden>
+        <div class="student-profile">
+            <p class="placeholder">Select a student to view their profile.</p>
+        </div>
     </div>
+
+    
 
     <script>
         var listOfNames = {{ listOfNames | tojson | safe }};
