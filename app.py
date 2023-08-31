@@ -58,8 +58,7 @@ def add_location():
     student = session.get("student")
     teacher = session.get("teacherName")
 
-    if teacher == None:
-        teacher = "init"
+    teacher = "init" if teacher is None else teacher
 
     if student:
         # current timestamp
