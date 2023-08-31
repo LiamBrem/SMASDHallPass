@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styleAdmin.css') }}">
     <!-- Include jQuery library from a CDN (Content Delivery Network) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <script src="{{ url_for('static', filename='admin.js') }}"></script>
+
+
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="Type student name...">
+        <ul id="studentList"></ul>
+        <input type="text" id="selectedStudent" placeholder="Selected Student" readonly hidden=hidden>
+    </div>
+
+    <script>
+        var listOfNames = {{ listOfNames | tojson | safe }};
+    </script>
     
 </body>
 </html>

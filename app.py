@@ -90,7 +90,9 @@ def end_page():
 # Admin Page
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    listOfNames = getListOfNamesFromDB()
+
+    return render_template('admin.html', listOfNames=listOfNames)
 
 
 # index

@@ -1,0 +1,44 @@
+/* Style for the container holding search bar and list */
+.search {
+    text-align: left;
+    margin-top: 50px;
+    font-family: arial;
+}
+
+/* Style for the search input */
+#searchInput {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Style for the student list */
+#studentList {
+    list-style-type: none;
+    padding: 0;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+#studentList li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#studentList li:last-child {
+    border-bottom: none;
+}
+
+
+
+
+
+
+
