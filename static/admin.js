@@ -7,15 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let selectedStudent = ""; // Initialize the variable
 
+
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.toLowerCase();
-       
+
         studentList.innerHTML = "";
-       
+
         const filteredStudents = allStudents.filter(student => student.toLowerCase().includes(searchTerm));
-       
+
         filteredStudents.sort();
-       
+
         filteredStudents.forEach(student => {
             const li = document.createElement("li");
             li.textContent = student;
@@ -38,8 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 */
 
-                var studentData = {"name":"liam", "age": 18, "activityHistory": "bathroom"} // Call a function to retrieve student data
+
+                var studentData = { "name": "liam", "age": 18, "activityHistory": "bathroom" } // Call a function to retrieve student data
                 updateStudentProfile(studentData);
+
 
 
             });
