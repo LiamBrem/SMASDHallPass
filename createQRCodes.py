@@ -1,8 +1,12 @@
 import qrcode
 from PIL import Image
+import os
 
 # Base URL - Will need changed once we get domain
 base_url = "127.0.0.1:5000/"
+
+# Specify the directory to save the QR code images
+save_directory = "/Desktop/QR"
 
 # Names to be appended
 with open("names/allTeachers.txt", "r") as file:
@@ -29,9 +33,12 @@ for name in listOfNames:
     
     # Create an image from the QR code instance
     img = qr.make_image(fill_color="black", back_color="white")
+
+    # Create the full path for saving the image
+    save_path = os.path.join(save_directory, f"qrcode_{name}.png")
     
     # Save the image
-    img.save(f"qrcode_{name}.png")
+    img.save(save_path)
 
     # Display the image (optional)
     img.show()

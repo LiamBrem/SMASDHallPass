@@ -1,6 +1,9 @@
 # Database
 *.db
 
+# Images
+*.png
+
 # Environments
 venv/
 bin/
