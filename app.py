@@ -55,6 +55,7 @@ def add_location():
     print(received_location)
 
     student = session.get("student")
+    teacher = session.get("teacherName")
 
     if student:
         # current timestamp
@@ -63,7 +64,7 @@ def add_location():
         # Update the student's location in the database
         cursor.execute(
             "INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)",
-            (student[0], received_location, current_time, "Brem"),
+            (student[0], received_location, current_time, teacher),
         )
         conn.commit()
 
@@ -92,7 +93,12 @@ def index():
 
 @app.route("/teacher/<teacherName>")
 def studentIndex(teacherName):
-    return str(teacherName)
+
+
+    session['teacherName'] = teacherName
+
+    listOfNames = getListOfNamesFromDB()
+    return render_template("index.html", listOfNames=listOfNames)
 
 
 def testFunction(student_id):
