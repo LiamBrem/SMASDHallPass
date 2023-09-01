@@ -26,30 +26,52 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(selectedStudent)
 
 
-                /*
+
                 // makes an ajax request to send the variable to a flask route
                 $.ajax({
                     type: "POST",
-                    url: "/send_name",
+                    url: "/get_student_admin",
                     data: JSON.stringify({ name: selectedStudent }),
                     contentType: "application/json",
-                    success: function(response) {
+                    success: function (response) {
                         console.log("Variable sent successfully!");
+                        // makes an ajax request to receive the data using the sent name 
+                        $.ajax({
+                            url: '/send_student_admin',
+                            type: 'GET',
+                            success: function (data) {
+                                var studentData = data;
+                                console.log(studentData);
+                                // Do something with the data in your frontend
+                                //$('#result').text(myJavaScriptVariable);
+
+                                updateStudentProfile(studentData);
+                            }
+                        });
                     }
                 });
-                */
-
-
-                var studentData = { "name": "liam", "age": 18, "activityHistory": "bathroom" } // Call a function to retrieve student data
-                updateStudentProfile(studentData);
-
-
-
             });
 
-            function updateStudentProfile(studentData) {
-                // Update the student profile section with the retrieved data
-                $('.student-profile').html('<h2>' + studentData.name + '</h2><p>Age: ' + studentData.age + '</p><p>Activity History: ' + studentData.activityHistory + '</p>');
+
+
+            function updateStudentProfile(studentDataList) {
+                // Clear the existing student profile section
+                $('.student-profile').empty();
+
+
+
+                // Loop through the list of dictionaries and create HTML elements for each student
+                studentDataList.forEach(function (studentData) {
+                    var studentProfileHtml = '<div class="student-info">';
+                    studentProfileHtml += '<h2>' + studentData.student_name + '</h2>';
+                    studentProfileHtml += '<p>Teacher: ' + studentData.teacher + '</p>';
+                    studentProfileHtml += '<p>Location: ' + studentData.location + '</p>';
+                    studentProfileHtml += '<p>Time: ' + studentData.time + '</p>';
+                    studentProfileHtml += '</div>';
+
+                    // Append the student profile HTML to the .student-profile element
+                    $('.student-profile').append(studentProfileHtml);
+                });
             }
 
 

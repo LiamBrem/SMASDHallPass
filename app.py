@@ -26,6 +26,45 @@ def getListOfNamesFromDB():
     return listOfNames
 
 
+# gets student data from DB
+def getAllStudentData(student_id):
+    conn, cursor = get_db_connection()
+
+    # Query student_history with student names
+    cursor.execute(
+        """
+        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName, sh.teacher
+        FROM student_history sh
+        INNER JOIN students s ON sh.student_id = s.id
+        WHERE sh.student_id = ?
+    """,
+        (student_id,),
+    )
+    history_rows = cursor.fetchall()
+
+    conn.close()
+
+    listOfHistory = []
+
+    if history_rows:
+        print(f"Student History for Student ID {student_id}:")
+        for row in history_rows:
+            history_id, location, time, student_name, teacher = row
+            history_dict = {
+                "history_id": history_id,
+                "student_name": student_name,
+                "location": location,
+                "time": time,
+                "teacher": teacher 
+            }
+            listOfHistory.append(history_dict)     
+    else:
+        print("No history found for the student.")
+
+    return listOfHistory
+
+
+
 # This recieves the name that the student clicks on from the JS studentSearchScript
 @app.route("/send_name", methods=["POST"])
 def send_name():
@@ -43,7 +82,6 @@ def send_name():
     else:
         print("student not found")
         return "Student not found."
-
 
 
 # Receives the selected location from the student 
@@ -76,6 +114,37 @@ def add_location():
         return "Student not found."
 
 
+#gets the selected student's name from the admin
+@app.route("/get_student_admin", methods=["POST"])
+def get_student_admin():
+    data = request.json
+    received_name = data.get("name") # Name received from frontend
+
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT * FROM students WHERE studentName = ?", (received_name,))
+    student = cursor.fetchone()
+
+    if student: # If student exists in the DB
+        # stores student data in session -> (<id>, "<Name>")
+        print("NAME: ", student)
+        session['studentAdmin'] = student
+        return "success"
+    else:
+        print("student not found")
+        return "Student not found."
+
+
+#sends student's data to admin
+@app.route("/send_student_admin", methods=['GET'])
+def send_student_admin():
+    student = session["studentAdmin"] # retreives student from the session
+    data = getAllStudentData(student[0]) # this is the student ID
+
+
+    #  data = {'name': 'Liam Brem', 'age': 18, 'recent Activity': 'bathroom'}
+    return jsonify(data)
+
+
 # Select Location
 @app.route("/location_page")
 def location_page():
@@ -86,6 +155,7 @@ def location_page():
 @app.route("/end_page")
 def end_page():
     return render_template("endPage.html")
+
 
 # Admin Page
 @app.route('/admin')
