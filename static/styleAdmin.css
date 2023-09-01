@@ -50,7 +50,17 @@
 }
 
 
+.student-info {
+    background-color: #ffffff; /* Set the background color to white */
+    border: 1px solid #e0e0e0; /* Add a light gray border */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+    padding: 16px; /* Add some padding to create space around the content */
+    margin-bottom: 16px; /* Add margin to separate each card */
+}
 
+.student-info p {
+    margin: 0; /* Remove default margin for <p> elements inside .student-info */
+}
 
 
 

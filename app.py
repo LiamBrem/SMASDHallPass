@@ -25,6 +25,15 @@ def getListOfNamesFromDB():
 
     return listOfNames
 
+def getListOfTeacherNames():
+    with open("names/allTeachers.txt", "r") as file:
+        listOfTeacherNames = file.readlines()
+
+    # Remove newline characters
+    return [item.strip() for item in listOfTeacherNames]
+
+
+
 
 # gets student data from DB
 def getAllStudentData(student_id):
@@ -62,7 +71,6 @@ def getAllStudentData(student_id):
         print("No history found for the student.")
 
     return listOfHistory
-
 
 
 # This recieves the name that the student clicks on from the JS studentSearchScript
