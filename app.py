@@ -164,6 +164,12 @@ def location_page():
 def end_page():
     return render_template("endPage.html")
 
+# Admin Teacher Page
+@app.route('/admin_teacher')
+def admin_teacher():
+    listOfTeacherNames = getListOfTeacherNames()
+    return render_template('adminTeacher.html', listOfTeacherNames=listOfTeacherNames)
+
 
 # Admin Page
 @app.route('/admin')

@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let selectedStudent = ""; // Initialize the variable
 
-
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.toLowerCase();
 
@@ -98,6 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             studentList.appendChild(li);
         });
+    });
+
+    const navigateButton = document.getElementById("switch-button");
+    // Add a click event listener to the button
+    navigateButton.addEventListener("click", () => {
+        // Change the page's location to the desired URL
+        console.log("click")
+        window.location.href = '/admin_teacher';
     });
 });
 
