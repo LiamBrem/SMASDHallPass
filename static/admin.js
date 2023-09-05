@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
-                                    updateStudentProfile(teacherData);
+                                    updateProfile(teacherData);
                                 }
                             });
                         }
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            function updateStudentProfile(studentDataList) {
+            function updateProfile(studentDataList) {
                 // Clear the existing student profile section
                 $('.student-profile').empty();
 

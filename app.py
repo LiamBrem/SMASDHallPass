@@ -72,6 +72,42 @@ def getAllStudentData(student_id):
 
     return listOfHistory
 
+def getAllTeacherData(teacher_name):
+    conn, cursor = get_db_connection()
+
+    # Query student_history with teacher name
+    cursor.execute(
+        """
+        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName, sh.teacher
+        FROM student_history sh
+        INNER JOIN students s ON sh.student_id = s.id
+        WHERE sh.teacher = ?
+    """,
+        (teacher_name,),
+    )
+    history_rows = cursor.fetchall()
+
+    conn.close()
+
+    listOfHistory = []
+
+    if history_rows:
+        print(f"Student History for Teacher: {teacher_name}")
+        for row in history_rows:
+            history_id, location, time, student_name, teacher = row
+            history_dict = {
+                "history_id": history_id,
+                "student_name": student_name,
+                "location": location,
+                "time": time,
+                "teacher": teacher 
+            }
+            listOfHistory.append(history_dict)     
+    else:
+        print(f"No history found for students taught by {teacher_name}.")
+
+    return listOfHistory
+
 
 # This recieves the name that the student clicks on from the JS studentSearchScript
 @app.route("/send_name", methods=["POST"])
@@ -150,6 +186,33 @@ def send_student_admin():
 
     return jsonify(data)
 
+
+
+@app.route("/get_teacher_admin", methods=["POST"])
+def get_teacher_admin():
+    
+    data = request.json
+    received_teacher = data.get("name")  # Teacher's name received from frontend
+    print("RECEIVED: ", received_teacher)
+
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT * FROM student_history WHERE teacher = ?", (received_teacher,))
+    teacher_data = cursor.fetchall()
+
+    if teacher_data:  # If teacher exists in the student_history table
+        session['teacherAdmin'] = received_teacher
+        print(teacher_data)
+        return "success"
+    else:
+        return "Teacher not found."
+
+@app.route("/send_teacher_admin")
+def send_teacher_admin():
+    teacher = session["teacherAdmin"] # retreives student from the session
+    # data = getAllStudentData(student[0]) # this is the student ID
+    data = getAllTeacherData(teacher)
+
+    return jsonify(data)
 
 # Select Location
 @app.route("/location_page")
