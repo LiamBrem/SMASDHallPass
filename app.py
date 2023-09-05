@@ -148,8 +148,6 @@ def send_student_admin():
     student = session["studentAdmin"] # retreives student from the session
     data = getAllStudentData(student[0]) # this is the student ID
 
-
-    #  data = {'name': 'Liam Brem', 'age': 18, 'recent Activity': 'bathroom'}
     return jsonify(data)
 
 
@@ -164,19 +162,14 @@ def location_page():
 def end_page():
     return render_template("endPage.html")
 
-# Admin Teacher Page
-@app.route('/admin_teacher')
-def admin_teacher():
-    listOfTeacherNames = getListOfTeacherNames()
-    return render_template('adminTeacher.html', listOfTeacherNames=listOfTeacherNames)
-
 
 # Admin Page
 @app.route('/admin')
 def admin():
-    listOfNames = getListOfNamesFromDB()
+    listOfStudentNames = getListOfNamesFromDB()
+    listOfTeacherNames = getListOfTeacherNames()
 
-    return render_template('admin.html', listOfNames=listOfNames)
+    return render_template('admin.html', listOfStudentNames=listOfStudentNames, listOfTeacherNames=listOfTeacherNames)
 
 
 # index

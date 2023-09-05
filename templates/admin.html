@@ -11,6 +11,10 @@
 </head>
 
 <body>
+    <script>
+        var listOfStudentNames = {{ listOfStudentNames | tojson | safe }};
+        var listOfTeacherNames = {{ listOfTeacherNames | tojson | safe }};
+    </script>
     <script src="{{ url_for('static', filename='admin.js') }}"></script>
 
 
@@ -20,8 +24,8 @@
 
         <div class="search">
             <input type="text" id="searchInput" placeholder="Type student name...">
-            <ul id="studentList"></ul>
-            <input type="text" id="selectedStudent" placeholder="Selected Student" readonly hidden=hidden>
+            <ul id="personList"></ul>
+            <input type="text" id="selectedPerson" placeholder="Selected Student" readonly hidden=hidden>
         </div>
 
         <div class="student-profile">
@@ -31,9 +35,7 @@
 
 
 
-    <script>
-        var listOfNames = {{ listOfNames | tojson | safe }};
-    </script>
+  
 
 </body>
 
