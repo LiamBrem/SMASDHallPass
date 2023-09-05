@@ -108,28 +108,41 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            function updateProfile(studentDataList) {
+            function updateProfile(dataList) {
+
+                if (mode === "student"){
+                    console.log(datal)
+                    mainName = dataList[0].student_name;
+                    cardName = "teacher_name";
+                    
+                } else {
+                    mainName = dataList[0].teacher;
+                    cardName = "student_name";
+
+                }
+
+
                 // Clear the existing student profile section
                 $('.student-profile').empty();
 
-                var studentDisplayName = '<div class="display-name"><h2>' + studentDataList[0].student_name + '</h2></div>'
-                $('.student-profile').append(studentDisplayName)
+                var studentDisplayName = '<div class="display-name"><h2>' + mainName + '</h2></div>';
+                $('.student-profile').append(studentDisplayName);
 
-                // Reverse the studentDataList
-                studentDataList = studentDataList.slice().reverse();
+                // Reverse the dataList
+                dataList = dataList.slice().reverse();
 
                 // Loop through the list of dictionaries and create HTML elements for each student
-                studentDataList.forEach(function (studentData) {
-                    var studentProfileHtml = '<div class="student-info">';
-                    studentProfileHtml += '<p>Teacher: ' + studentData.teacher + '</p>';
-                    studentProfileHtml += '<p>Location: ' + studentData.location + '</p>';
-                    studentProfileHtml += '<p>Date: ' + formatDateTime(studentData.time).date + '</p>';
-                    studentProfileHtml += '<p>Time: ' + formatDateTime(studentData.time).time + '</p>';
-                    studentProfileHtml += '<br></br>'
-                    studentProfileHtml += '</div>';
+                dataList.forEach(function (personData) {
+                    var profileHtml = '<div class="student-info">';
+                    profileHtml += '<p>Teacher: ' + personData.cardName + '</p>'; // this isn't working 
+                    profileHtml += '<p>Location: ' + personData.location + '</p>';
+                    profileHtml += '<p>Date: ' + formatDateTime(personData.time).date + '</p>';
+                    profileHtml += '<p>Time: ' + formatDateTime(personData.time).time + '</p>';
+                    profileHtml += '<br></br>'
+                    profileHtml += '</div>';
 
                     // Append the student profile HTML to the .student-profile element
-                    $('.student-profile').append(studentProfileHtml);
+                    $('.student-profile').append(profileHtml);
                 });
             }
 

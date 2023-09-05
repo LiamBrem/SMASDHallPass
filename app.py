@@ -72,6 +72,7 @@ def getAllStudentData(student_id):
     return listOfHistory
 
 
+# gets teacher data from DB
 def getAllTeacherData(teacher_name):
     conn, cursor = get_db_connection()
 
@@ -187,6 +188,7 @@ def send_student_admin():
     return jsonify(data)
 
 
+# gets selected teacher's name from the admin
 @app.route("/get_teacher_admin", methods=["POST"])
 def get_teacher_admin():
     data = request.json
@@ -207,6 +209,7 @@ def get_teacher_admin():
         return "Teacher not found."
 
 
+# sends list of data to admin
 @app.route("/send_teacher_admin")
 def send_teacher_admin():
     teacher = session["teacherAdmin"]  # retreives student from the session
