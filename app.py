@@ -25,14 +25,13 @@ def getListOfNamesFromDB():
 
     return listOfNames
 
+
 def getListOfTeacherNames():
     with open("names/allTeachers.txt", "r") as file:
         listOfTeacherNames = file.readlines()
 
     # Remove newline characters
     return [item.strip() for item in listOfTeacherNames]
-
-
 
 
 # gets student data from DB
@@ -64,13 +63,14 @@ def getAllStudentData(student_id):
                 "student_name": student_name,
                 "location": location,
                 "time": time,
-                "teacher": teacher 
+                "teacher": teacher,
             }
-            listOfHistory.append(history_dict)     
+            listOfHistory.append(history_dict)
     else:
         print("No history found for the student.")
 
     return listOfHistory
+
 
 def getAllTeacherData(teacher_name):
     conn, cursor = get_db_connection()
@@ -100,9 +100,9 @@ def getAllTeacherData(teacher_name):
                 "student_name": student_name,
                 "location": location,
                 "time": time,
-                "teacher": teacher 
+                "teacher": teacher,
             }
-            listOfHistory.append(history_dict)     
+            listOfHistory.append(history_dict)
     else:
         print(f"No history found for students taught by {teacher_name}.")
 
@@ -113,13 +113,13 @@ def getAllTeacherData(teacher_name):
 @app.route("/send_name", methods=["POST"])
 def send_name():
     data = request.json
-    received_name = data.get("name") # Name received from frontend
+    received_name = data.get("name")  # Name received from frontend
 
     conn, cursor = get_db_connection()
     cursor.execute("SELECT * FROM students WHERE studentName = ?", (received_name,))
     student = cursor.fetchone()
 
-    if student: # If student exists in the DB
+    if student:  # If student exists in the DB
         # stores student data in session
         session["student"] = student
         return "success"
@@ -128,7 +128,7 @@ def send_name():
         return "Student not found."
 
 
-# Receives the selected location from the student 
+# Receives the selected location from the student
 @app.route("/add_location", methods=["POST"])
 def add_location():
     conn, cursor = get_db_connection()
@@ -158,61 +158,63 @@ def add_location():
         return "Student not found."
 
 
-#gets the selected student's name from the admin
+# gets the selected student's name from the admin
 @app.route("/get_student_admin", methods=["POST"])
 def get_student_admin():
     data = request.json
-    received_name = data.get("name") # Name received from frontend
+    received_name = data.get("name")  # Name received from frontend
 
     conn, cursor = get_db_connection()
     cursor.execute("SELECT * FROM students WHERE studentName = ?", (received_name,))
     student = cursor.fetchone()
 
-    if student: # If student exists in the DB
+    if student:  # If student exists in the DB
         # stores student data in session -> (<id>, "<Name>")
         print("NAME: ", student)
-        session['studentAdmin'] = student
+        session["studentAdmin"] = student
         return "success"
     else:
         print("student not found")
         return "Student not found."
 
 
-#sends student's data to admin
-@app.route("/send_student_admin", methods=['GET'])
+# sends student's data to admin
+@app.route("/send_student_admin", methods=["GET"])
 def send_student_admin():
-    student = session["studentAdmin"] # retreives student from the session
-    data = getAllStudentData(student[0]) # this is the student ID
+    student = session["studentAdmin"]  # retreives student from the session
+    data = getAllStudentData(student[0])  # this is the student ID
 
     return jsonify(data)
 
 
-
 @app.route("/get_teacher_admin", methods=["POST"])
 def get_teacher_admin():
-    
     data = request.json
     received_teacher = data.get("name")  # Teacher's name received from frontend
     print("RECEIVED: ", received_teacher)
 
     conn, cursor = get_db_connection()
-    cursor.execute("SELECT * FROM student_history WHERE teacher = ?", (received_teacher,))
+    cursor.execute(
+        "SELECT * FROM student_history WHERE teacher = ?", (received_teacher,)
+    )
     teacher_data = cursor.fetchall()
 
     if teacher_data:  # If teacher exists in the student_history table
-        session['teacherAdmin'] = received_teacher
+        session["teacherAdmin"] = received_teacher
         print(teacher_data)
         return "success"
     else:
         return "Teacher not found."
 
+
 @app.route("/send_teacher_admin")
 def send_teacher_admin():
-    teacher = session["teacherAdmin"] # retreives student from the session
+    teacher = session["teacherAdmin"]  # retreives student from the session
     # data = getAllStudentData(student[0]) # this is the student ID
     data = getAllTeacherData(teacher)
 
     return jsonify(data)
+
 
 # Select Location
 @app.route("/location_page")
@@ -227,12 +229,16 @@ def end_page():
 
 
 # Admin Page
-@app.route('/admin')
+@app.route("/admin")
 def admin():
     listOfStudentNames = getListOfNamesFromDB()
     listOfTeacherNames = getListOfTeacherNames()
 
-    return render_template('admin.html', listOfStudentNames=listOfStudentNames, listOfTeacherNames=listOfTeacherNames)
+    return render_template(
+        "admin.html",
+        listOfStudentNames=listOfStudentNames,
+        listOfTeacherNames=listOfTeacherNames,
+    )
 
 
 # index
@@ -245,7 +251,7 @@ def index():
 # index with teacher
 @app.route("/teacher/<teacherName>")
 def studentIndex(teacherName):
-    session['teacherName'] = teacherName # stores teacher from URL in a session
+    session["teacherName"] = teacherName  # stores teacher from URL in a session
 
     listOfNames = getListOfNamesFromDB()
     return render_template("index.html", listOfNames=listOfNames)
