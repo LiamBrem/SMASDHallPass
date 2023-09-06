@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     let mode = "student";
     const studentNames = listOfStudentNames;
-    const teacherNames = listOfTeacherNames
+    const teacherNames = listOfTeacherNames;
 
     let allPeople;
 
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
-                                    updateStudentProfile(studentData);
+                                    updateProfile(studentData);
                                 }
                             });
                         }
@@ -110,10 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             function updateProfile(dataList) {
 
+                // Reverse the dataList
+                dataList = dataList.slice().reverse();
+
                 if (mode === "student"){
-                    console.log(datal)
+                    //console.log(data)
                     mainName = dataList[0].student_name;
-                    cardName = "teacher_name";
+                    cardName = "teacher";
                     
                 } else {
                     mainName = dataList[0].teacher;
@@ -121,20 +124,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 }
 
+                console.log(mainName)
 
                 // Clear the existing student profile section
                 $('.student-profile').empty();
 
-                var studentDisplayName = '<div class="display-name"><h2>' + mainName + '</h2></div>';
-                $('.student-profile').append(studentDisplayName);
+                var displayName = '<div class="display-name"><h2>' + mainName + '</h2></div>';
+                $('.student-profile').append(displayName);
 
-                // Reverse the dataList
-                dataList = dataList.slice().reverse();
+                
 
                 // Loop through the list of dictionaries and create HTML elements for each student
                 dataList.forEach(function (personData) {
-                    var profileHtml = '<div class="student-info">';
-                    profileHtml += '<p>Teacher: ' + personData.cardName + '</p>'; // this isn't working 
+                    var profileHtml = '<div class="person-info">';
+                    profileHtml += '<p>Name: ' + personData[cardName] + '</p>'; // this isn't working 
                     profileHtml += '<p>Location: ' + personData.location + '</p>';
                     profileHtml += '<p>Date: ' + formatDateTime(personData.time).date + '</p>';
                     profileHtml += '<p>Time: ' + formatDateTime(personData.time).time + '</p>';
@@ -158,11 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mode==="teacher"){
             mode = "student";
             allPeople = listOfStudentNames;
+            navigateButton.textContent = "Search by Teacher Instead"
         } else {
             mode = "teacher";
             allPeople = listOfTeacherNames;
+            navigateButton.textContent = "Search by Student Instead"
         }
-        console.log(mode)
     });
 });
 

@@ -55,7 +55,6 @@ def getAllStudentData(student_id):
     listOfHistory = []
 
     if history_rows:
-        print(f"Student History for Student ID {student_id}:")
         for row in history_rows:
             history_id, location, time, student_name, teacher = row
             history_dict = {
@@ -93,7 +92,6 @@ def getAllTeacherData(teacher_name):
     listOfHistory = []
 
     if history_rows:
-        print(f"Student History for Teacher: {teacher_name}")
         for row in history_rows:
             history_id, location, time, student_name, teacher = row
             history_dict = {
@@ -171,7 +169,6 @@ def get_student_admin():
 
     if student:  # If student exists in the DB
         # stores student data in session -> (<id>, "<Name>")
-        print("NAME: ", student)
         session["studentAdmin"] = student
         return "success"
     else:
@@ -183,6 +180,7 @@ def get_student_admin():
 @app.route("/send_student_admin", methods=["GET"])
 def send_student_admin():
     student = session["studentAdmin"]  # retreives student from the session
+    session.clear()
     data = getAllStudentData(student[0])  # this is the student ID
 
     return jsonify(data)
@@ -193,7 +191,6 @@ def send_student_admin():
 def get_teacher_admin():
     data = request.json
     received_teacher = data.get("name")  # Teacher's name received from frontend
-    print("RECEIVED: ", received_teacher)
 
     conn, cursor = get_db_connection()
     cursor.execute(
@@ -201,20 +198,27 @@ def get_teacher_admin():
     )
     teacher_data = cursor.fetchall()
 
+    print('recieved_teacher ', received_teacher)
+    print('data ', teacher_data)
+
     if teacher_data:  # If teacher exists in the student_history table
         session["teacherAdmin"] = received_teacher
-        print(teacher_data)
         return "success"
     else:
+        print('error: not found')
         return "Teacher not found."
 
 
 # sends list of data to admin
 @app.route("/send_teacher_admin")
 def send_teacher_admin():
-    teacher = session["teacherAdmin"]  # retreives student from the session
+    teacher = session["teacherAdmin"]  # retreives teacher from the session
     # data = getAllStudentData(student[0]) # this is the student ID
+    session.clear()
     data = getAllTeacherData(teacher)
+
+    print(teacher)
+    print(data)
 
     return jsonify(data)
 
