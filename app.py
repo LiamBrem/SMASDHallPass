@@ -198,14 +198,11 @@ def get_teacher_admin():
     )
     teacher_data = cursor.fetchall()
 
-    print('recieved_teacher ', received_teacher)
-    print('data ', teacher_data)
-
     if teacher_data:  # If teacher exists in the student_history table
         session["teacherAdmin"] = received_teacher
         return "success"
     else:
-        print('error: not found')
+        print("error: not found")
         return "Teacher not found."
 
 
@@ -216,9 +213,6 @@ def send_teacher_admin():
     # data = getAllStudentData(student[0]) # this is the student ID
     session.clear()
     data = getAllTeacherData(teacher)
-
-    print(teacher)
-    print(data)
 
     return jsonify(data)
 
