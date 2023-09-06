@@ -105,7 +105,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (parts.length === 2) {
                     const datePart = parts[0]; // Get the date part
-                    const timePart = parts[1]; // Get the time part
+                    let timePart = parts[1]; // Get the time part
+
+                     // Split the timePart by the dot (.) to separate seconds and milliseconds
+                    const timeComponents = timePart.split('.');
+                    
+                    if (timeComponents.length >= 1) {
+                        // Get the hour, minute, and second components
+                        const [hour, minute, second] = timeComponents[0].split(':');
+                        
+                        // Construct the formatted time string without milliseconds
+                        timePart = `${hour}:${minute}:${second}`;
+                    }
 
                     return { date: datePart, time: timePart };
                 }
@@ -143,13 +154,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Loop through the list of dictionaries, excluding the last one
                 for (var i = 0; i < dataList.length - 1; i++) {
                     var personData = dataList[i];
-                    var profileHtml = '<div class="person-info">';
-                    profileHtml += '<p>Name: ' + personData[cardName] + '</p>';
+                    var profileHtml = '<div class="panel panel-default">';
+                    profileHtml += '<div class="panel-heading">Name: ' + personData[cardName] + '</div>';
+                    profileHtml += '<div class="panel-body">'
                     profileHtml += '<p>Location: ' + personData.location + '</p>';
                     profileHtml += '<p>Date: ' + formatDateTime(personData.time).date + '</p>';
                     profileHtml += '<p>Time: ' + formatDateTime(personData.time).time + '</p>';
-                    profileHtml += '<br></br>';
-                    profileHtml += '</div>';
+                    profileHtml += '</div></div>';
 
                     // Append the student profile HTML to the .student-profile element
                     $('.student-profile').append(profileHtml);

@@ -5,9 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styleAdmin.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styleAdmin.css') }}"> -->
     <!-- Include jQuery library from a CDN (Content Delivery Network) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -19,23 +23,33 @@
 
 
 
-    <div class="main">
-        <button id="switch-button">Select Teacher Instead</button>
-
-        <div class="search">
-            <input type="text" id="searchInput" placeholder="Type student name...">
-            <ul id="personList"></ul>
-            <input type="text" id="selectedPerson" placeholder="Selected Student" readonly hidden=hidden>
+    <div class="container">
+        <div class="row"><br></div>
+        <div class="row">
+            <div class="col-md-4">
+                <button type="button" id="switch-button" class="btn btn-info btn-lg">Select Teacher Instead</button>
+            </div>
+            <div class="col-md-4">
+                <div class="search">
+                    <input type="text" class="form-control input-lg" id="searchInput" placeholder="Type student name...">
+                    <ul id="personList"></ul>
+                    <input type="text" id="selectedPerson" placeholder="Selected Student" readonly hidden=hidden>
+                </div>
+            </div>
         </div>
 
-        <div class="student-profile">
-            <p class="placeholder">Select Name</p>
+        <div class="row">
+            <div class="col-md-8">
+            <div class="student-profile">
+                <p class="placeholder">Select Name</p>
+            </div>
+            </div>
         </div>
     </div>
 
 
 
-  
+
 
 </body>
 
