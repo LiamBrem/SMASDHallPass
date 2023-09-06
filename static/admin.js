@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 // Loop through the list of dictionaries, excluding the last one
-                for (var i = 0; i < dataList.length - 1; i++) {
+                for (var i = 0; i < dataList.length - 1 && i<50 ; i++) {
                     var personData = dataList[i];
                     var profileHtml = '<div class="panel panel-default">';
                     profileHtml += '<div class="panel-heading">Name: ' + personData[cardName] + '</div>';
