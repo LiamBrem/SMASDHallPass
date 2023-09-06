@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             li.textContent = student;
             li.addEventListener("click", () => {
                 selectedStudent = student; // Update the variable
+                console.log(selectedStudent)
                 selectedStudentField.value = selectedStudent;
                 console.log(selectedStudent)
 

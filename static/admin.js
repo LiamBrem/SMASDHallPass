@@ -140,20 +140,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 $('.student-profile').append(displayName);
 
 
-
-                // Loop through the list of dictionaries and create HTML elements for each student
-                dataList.forEach(function (personData) {
+                // Loop through the list of dictionaries, excluding the last one
+                for (var i = 0; i < dataList.length - 1; i++) {
+                    var personData = dataList[i];
                     var profileHtml = '<div class="person-info">';
-                    profileHtml += '<p>Name: ' + personData[cardName] + '</p>'; // this isn't working 
+                    profileHtml += '<p>Name: ' + personData[cardName] + '</p>';
                     profileHtml += '<p>Location: ' + personData.location + '</p>';
                     profileHtml += '<p>Date: ' + formatDateTime(personData.time).date + '</p>';
                     profileHtml += '<p>Time: ' + formatDateTime(personData.time).time + '</p>';
-                    profileHtml += '<br></br>'
+                    profileHtml += '<br></br>';
                     profileHtml += '</div>';
 
                     // Append the student profile HTML to the .student-profile element
                     $('.student-profile').append(profileHtml);
-                });
+                }
             }
 
 
@@ -169,10 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
             mode = "student";
             allPeople = listOfStudentNames;
             navigateButton.textContent = "Search by Teacher Instead"
+            searchInput.placeholder = "Type Student Name..."
         } else {
             mode = "teacher";
             allPeople = listOfTeacherNames;
             navigateButton.textContent = "Search by Student Instead"
+            searchInput.placeholder = "Type Teacher Name..."
         }
     });
 });
