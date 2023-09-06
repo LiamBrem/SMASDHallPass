@@ -172,6 +172,7 @@ def get_student_admin():
         session["studentAdmin"] = student
         return "success"
     else:
+        conn.close()
         print("student not found")
         return "Student not found."
 
