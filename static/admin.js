@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     //console.log(data)
                     mainName = dataList[0].student_name;
                     cardName = "teacher";
-                    exportedDataList = dataList.slice().reverse();
+                    //makeGraph(dataList.slice().reverse());
 
                 } else {
                     mainName = dataList[0].teacher;
@@ -175,6 +175,102 @@ document.addEventListener("DOMContentLoaded", () => {
                     $('.student-profile').append(profileHtml);
                 }
             }
+            
+
+            /*
+            function makeGraph(data){
+                // Convert time strings to Date objects
+                data.forEach(entry => {
+                    entry.time = new Date(entry.time);
+                });
+                
+                // Group data by week and count leaves per week
+                const leavesPerWeek = d3.rollup(
+                    data,
+                    group => group.length,
+                    d => d3.timeWeek(d.time)
+                );
+                
+                // Convert the Map to an array of objects
+                const weeklyData = Array.from(leavesPerWeek, ([week, count]) => ({ week, count }));
+                
+                // Create SVG dimensions
+                const width = 800;
+                const height = 400;
+                const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+                
+                // Create the SVG element
+                const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+                
+                // Define x and y scales
+                const xScale = d3.scaleTime()
+                    .domain(d3.extent(weeklyData, d => d.week))
+                    .range([margin.left, width - margin.right]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(weeklyData, d => d.count)])
+                    .nice()
+                    .range([height - margin.bottom, margin.top]);
+                
+                // Create x and y axes
+                const xAxis = d3.axisBottom(xScale).ticks(d3.timeWeek.every(1));
+                const yAxis = d3.axisLeft(yScale);
+                
+                // Append x axis
+                svg.append("g")
+                    .attr("class", "x-axis")
+                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                    .call(xAxis);
+                
+                // Append y axis
+                svg.append("g")
+                    .attr("class", "y-axis")
+                    .attr("transform", `translate(${margin.left},0)`)
+                    .call(yAxis);
+                
+                // Create a line generator
+                const line = d3.line()
+                    .x(d => xScale(d.week))
+                    .y(d => yScale(d.count));
+                
+                // Append the line chart
+                svg.append("path")
+                    .datum(weeklyData)
+                    .attr("fill", "none")
+                    .attr("stroke", "steelblue")
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+                
+                // Add labels and title
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", height - 10)
+                    .attr("text-anchor", "middle")
+                    .text("Week");
+                
+                svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("x", -height / 2)
+                    .attr("y", 10)
+                    .attr("text-anchor", "middle")
+                    .text("Number of Leaves");
+                
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", margin.top)
+                    .attr("text-anchor", "middle")
+                    .attr("font-weight", "bold")
+                    .text("Student Leaves Per Week");
+                
+                    
+
+                const container = d3.select("#graph-container");
+                container.append(() => svg.node());
+            }
+            */
 
 
 
