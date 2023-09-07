@@ -1,3 +1,6 @@
+//global
+var exportedDataList;
+
 document.addEventListener("DOMContentLoaded", () => {
     // initial mode student
     let mode = "student";
@@ -36,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
         filteredPeople.forEach(person => {
             const li = document.createElement("li");
             li.textContent = person;
+            li.classList.add("list-group-item")
+
             // event listener for each person
             li.addEventListener("click", () => {
                 selectedPerson = person; // Update the variable
@@ -126,15 +131,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            function updateProfile(dataList) {
 
+            function updateProfile(dataList) {
                 // Reverse the dataList
                 dataList = dataList.slice().reverse();
+
+                var mainName;
+                var cardName;
 
                 if (mode === "student") {
                     //console.log(data)
                     mainName = dataList[0].student_name;
                     cardName = "teacher";
+                    exportedDataList = dataList.slice().reverse();
 
                 } else {
                     mainName = dataList[0].teacher;
@@ -142,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 }
 
-                console.log(mainName)
+                //console.log(mainName)
 
                 // Clear the existing student profile section
                 $('.student-profile').empty();

@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = "asdf"  # Needed to encrypt session data
 
+# Configuration for serving static files
+app.static_folder = 'static'
+
 
 # connects to db -> returns conn, cursor
 def get_db_connection():
