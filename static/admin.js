@@ -1,6 +1,3 @@
-//global
-var exportedDataList;
-
 document.addEventListener("DOMContentLoaded", () => {
     // initial mode student
     let mode = "student";
@@ -46,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedPerson = person; // Update the variable
                 selectedPersonField.value = selectedPerson;
                 console.log(selectedPerson)
+
+                removeGraph();
 
                 if (mode === "student") {
                     // makes an ajax request to send the variable to a flask route
@@ -105,32 +104,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             function formatDateTime(dateTime) {
-                // Split the dateTime string into date and time parts
-                const parts = dateTime.split(' ');
-
-                if (parts.length === 2) {
-                    const datePart = parts[0]; // Get the date part
-                    let timePart = parts[1]; // Get the time part
-
-                     // Split the timePart by the dot (.) to separate seconds and milliseconds
-                    const timeComponents = timePart.split('.');
-                    
-                    if (timeComponents.length >= 1) {
-                        // Get the hour, minute, and second components
-                        const [hour, minute, second] = timeComponents[0].split(':');
-                        
-                        // Construct the formatted time string without milliseconds
-                        timePart = `${hour}:${minute}:${second}`;
-                    }
-
+                // Check if dateTime is a Date object
+                if (dateTime instanceof Date) {
+                    // Extract date and time components
+                    const datePart = dateTime.toDateString(); // Get the date part
+                    const timePart = dateTime.toLocaleTimeString(); // Get the time part
                     return { date: datePart, time: timePart };
                 }
-
-                // Return null or handle invalid input as needed
+            
+                // Check if dateTime is a string
+                if (typeof dateTime === 'string') {
+                    // Convert the string to a Date object
+                    const dateObject = new Date(dateTime);
+            
+                    // Check if the conversion was successful
+                    if (!isNaN(dateObject.getTime())) {
+                        // Extract date and time components
+                        const datePart = dateObject.toDateString(); // Get the date part
+                        const timePart = dateObject.toLocaleTimeString(); // Get the time part
+                        return { date: datePart, time: timePart };
+                    } else {
+                        console.error('Invalid date/time string format.');
+                        return null;
+                    }
+                }
+                console.error('Input is not a valid Date object or string.');
                 return null;
             }
-
-
 
             function updateProfile(dataList) {
                 // Reverse the dataList
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     //console.log(data)
                     mainName = dataList[0].student_name;
                     cardName = "teacher";
-                    //makeGraph(dataList.slice().reverse());
+                    makeGraph(dataList.slice().reverse());
 
                 } else {
                     mainName = dataList[0].teacher;
@@ -177,100 +177,90 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
 
-            /*
-            function makeGraph(data){
-                // Convert time strings to Date objects
-                data.forEach(entry => {
-                    entry.time = new Date(entry.time);
+            
+            function makeGraph(data) {
+                var margin = { top: 20, right: 20, bottom: 25, left: 25 };
+                var width = 600 - margin.left - margin.right;
+                var height = 300 - margin.top - margin.bottom;
+            
+                // Parse the time strings into Date objects
+                data.forEach(function(d) {
+                    d.time = new Date(d.time); // Convert time strings to Date objects
                 });
-                
-                // Group data by week and count leaves per week
-                const leavesPerWeek = d3.rollup(
-                    data,
-                    group => group.length,
-                    d => d3.timeWeek(d.time)
-                );
-                
-                // Convert the Map to an array of objects
-                const weeklyData = Array.from(leavesPerWeek, ([week, count]) => ({ week, count }));
-                
-                // Create SVG dimensions
-                const width = 800;
-                const height = 400;
-                const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-                
-                // Create the SVG element
-                const svg = d3.select("body")
+            
+                // Group data by date and count the number of times the student left each day
+                var dataByDate = d3.nest()
+                    .key(function(d) {
+                        return d3.timeDay(d.time); // Group by date
+                    })
+                    .rollup(function(leaves) {
+                        return leaves.length; // Count the number of leaves
+                    })
+                    .entries(data);
+            
+                // Sort data by date
+                dataByDate.sort(function(a, b) {
+                    return d3.ascending(new Date(a.key), new Date(b.key));
+                });
+            
+                // Create an SVG element inside the 'graph-container' div
+                var svg = d3.select("#graph-container")
                     .append("svg")
-                    .attr("width", width)
-                    .attr("height", height);
-                
-                // Define x and y scales
-                const xScale = d3.scaleTime()
-                    .domain(d3.extent(weeklyData, d => d.week))
-                    .range([margin.left, width - margin.right]);
-                
-                const yScale = d3.scaleLinear()
-                    .domain([0, d3.max(weeklyData, d => d.count)])
-                    .nice()
-                    .range([height - margin.bottom, margin.top]);
-                
-                // Create x and y axes
-                const xAxis = d3.axisBottom(xScale).ticks(d3.timeWeek.every(1));
-                const yAxis = d3.axisLeft(yScale);
-                
-                // Append x axis
-                svg.append("g")
-                    .attr("class", "x-axis")
-                    .attr("transform", `translate(0,${height - margin.bottom})`)
-                    .call(xAxis);
-                
-                // Append y axis
-                svg.append("g")
-                    .attr("class", "y-axis")
-                    .attr("transform", `translate(${margin.left},0)`)
-                    .call(yAxis);
-                
-                // Create a line generator
-                const line = d3.line()
-                    .x(d => xScale(d.week))
-                    .y(d => yScale(d.count));
-                
-                // Append the line chart
-                svg.append("path")
-                    .datum(weeklyData)
-                    .attr("fill", "none")
-                    .attr("stroke", "steelblue")
-                    .attr("stroke-width", 2)
-                    .attr("d", line);
-                
-                // Add labels and title
-                svg.append("text")
-                    .attr("x", width / 2)
-                    .attr("y", height - 10)
-                    .attr("text-anchor", "middle")
-                    .text("Week");
-                
-                svg.append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("x", -height / 2)
-                    .attr("y", 10)
-                    .attr("text-anchor", "middle")
-                    .text("Number of Leaves");
-                
-                svg.append("text")
-                    .attr("x", width / 2)
-                    .attr("y", margin.top)
-                    .attr("text-anchor", "middle")
-                    .attr("font-weight", "bold")
-                    .text("Student Leaves Per Week");
-                
-                    
+                    .attr("width", width + margin.left + margin.right) // Include margin in width
+                    .attr("height", height + margin.top + margin.bottom); // Include margin in height
+            
+                // Create a group for the main chart
+                var chart = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+                // Define scales and axes
+                var xScale = d3.scaleBand()
+                    .domain(dataByDate.map(function(d) { return new Date(d.key); })) // Use all dates as domain
+                    .range([0, width]) // Adjusted for margin
+                    .padding(0.1); // Adjust the padding between bars as needed
+            
+                var yScale = d3.scaleLinear()
+                    .domain([0, d3.max(dataByDate, function(d) { return d.value; })])
+                    .range([height, 0]); // Adjusted for margin
+            
+                var xAxis = d3.axisBottom(xScale)
+                    .tickFormat(function(d) {
+                        var formatDate = d3.timeFormat("%a %b %d");
+                        return formatDate(d);
+                    });
 
-                const container = d3.select("#graph-container");
-                container.append(() => svg.node());
+
+                var yAxis = d3.axisLeft(yScale);
+            
+                // Create bars
+                chart.selectAll(".bar")
+                    .data(dataByDate)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function(d) { return xScale(new Date(d.key)); })
+                    .attr("y", function(d) { return yScale(d.value); })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) { return height - yScale(d.value); })
+                    .attr("fill", "#54B4D3");
+            
+                // Add x and y axes
+                chart.append("g")
+                    .attr("class", "x-axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+            
+                chart.append("g")
+                    .attr("class", "y-axis")
+                    .call(yAxis);
             }
-            */
+            
+            
+            
+
+            function removeGraph(){
+                d3.select("#graph-container").selectAll("*").remove();
+            }
+            
 
 
 
