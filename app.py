@@ -320,4 +320,5 @@ def testFunction(student_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    if not app.debug():
+        app.run()
