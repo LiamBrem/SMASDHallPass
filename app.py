@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 import sqlite3
 from datetime import datetime, timedelta
+from config import DEBUG
 
 app = Flask(__name__)
 app.secret_key = "asdf"  # Needed to encrypt session data
@@ -319,5 +320,7 @@ def testFunction(student_id):
         print("No history found for the student.")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and DEBUG:
     app.run()
+
+#testing
