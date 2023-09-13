@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mainName = dataList[0].student_name;
                     cardName = "teacher";
                     makeGraph(dataList.slice().reverse());
+                    makeGraph2(dataList.slice().reverse());
 
                 } else {
                     mainName = dataList[0].teacher;
@@ -294,11 +295,90 @@ document.addEventListener("DOMContentLoaded", () => {
                     .call(yAxis);
             }
 
+            function makeGraph2(data){
+                // Create an object to store the count of each location
+                var locationCounts = {
+                    bathroom: 0,
+                    nurse: 0,
+                    main: 0,
+                    teacher: 0,
+                    other: 0
+                };
+
+                // Count the number of times a student has been to each location
+                data.forEach(function (d) {
+                    var location = d.location.toLowerCase(); // Convert to lowercase for consistency
+                    console.log(location);
+                    if (location in locationCounts) {
+                        locationCounts[location]++;
+                    }
+                });
+
+                // Convert locationCounts object to an array of objects
+                var locationData = Object.keys(locationCounts).map(function (location) {
+                    return {
+                        location: location,
+                        count: locationCounts[location]
+                    };
+                });
+
+                // Set up the dimensions and margins
+                var margin = { top: 20, right: 20, bottom: 60, left: 40 };
+                var width = 600 - margin.left - margin.right;
+                var height = 300 - margin.top - margin.bottom;
+
+                // Create an SVG element inside the 'graph-container2' div
+                var svg = d3.select("#graph-container2")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom);
+
+                // Create a group for the main chart
+                var chart = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                // Define scales and axes
+                var xScale = d3.scaleBand()
+                    .domain(locationData.map(function (d) { return d.location; }))
+                    .range([0, width])
+                    .padding(0.1);
+
+                var yScale = d3.scaleLinear()
+                    .domain([0, d3.max(locationData, function (d) { return d.count; })])
+                    .range([height, 0]);
+
+                var xAxis = d3.axisBottom(xScale);
+                var yAxis = d3.axisLeft(yScale);
+
+                // Create bars
+                chart.selectAll(".bar")
+                    .data(locationData)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function (d) { return xScale(d.location); })
+                    .attr("y", function (d) { return yScale(d.count); })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function (d) { return height - yScale(d.count); })
+                    .attr("fill", "#54B4D3");
+
+                // Add x and y axes
+                chart.append("g")
+                    .attr("class", "x-axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                chart.append("g")
+                    .attr("class", "y-axis")
+                    .call(yAxis);
+
+            }
+
 
 
 
             function removeGraph() {
                 d3.select("#graph-container").selectAll("*").remove();
+                d3.select("#graph2-container").selectAll("*").remove();
             }
 
 
