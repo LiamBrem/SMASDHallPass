@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-            function formatDateTime(dateTime) { 
+            function formatDateTime(dateTime) {
                 // Check if dateTime is a Date object
                 if (dateTime instanceof Date) {
                     // Extract date and time components
@@ -111,12 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const timePart = dateTime.toLocaleTimeString(); // Get the time part
                     return { date: datePart, time: timePart };
                 }
-            
+
                 // Check if dateTime is a string
                 if (typeof dateTime === 'string') {
                     // Convert the string to a Date object
                     const dateObject = new Date(dateTime);
-            
+
                     // Check if the conversion was successful
                     if (!isNaN(dateObject.getTime())) {
                         // Extract date and time components
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 // Loop through the list of dictionaries, excluding the last one
-                for (var i = 0; i < dataList.length - 1 && i<50 ; i++) {
+                for (var i = 0; i < dataList.length - 1 && i < 50; i++) {
                     var personData = dataList[i];
                     var profileHtml = '<div class="panel panel-default">';
                     profileHtml += '<div class="panel-heading">Name: ' + personData[cardName] + '</div>';
@@ -178,17 +178,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             function getTotalUniqueDays(data) {
                 var uniqueDates = {}; // Object to store unique dates as keys
-            
+
                 // Iterate through the data and record unique dates
-                data.forEach(function(d) {
+                data.forEach(function (d) {
                     // Format the date as YYYY-MM-DD to make it unique
                     var dateKey = d.time.toISOString().split('T')[0];
                     uniqueDates[dateKey] = true; // Store unique dates as keys
                 });
-            
+
                 // Calculate the count of unique dates
                 var count = Object.keys(uniqueDates).length;
-            
+
                 return count;
             }
 
@@ -196,66 +196,66 @@ document.addEventListener("DOMContentLoaded", () => {
                 return Math.floor(totalDays / 10);
 
             }
-            
 
-            
+
+
             function makeGraph(data) {
                 var margin = { top: 20, right: 20, bottom: 60, left: 25 };
                 var width = 600 - margin.left - margin.right;
                 var height = 300 - margin.top - margin.bottom;
-            
+
                 // Parse the time strings into Date objects
-                data.forEach(function(d) {
+                data.forEach(function (d) {
                     d.time = new Date(d.time); // Convert time strings to Date objects
                 });
-            
+
                 // Group data by date and count the number of times the student left each day
                 var dataByDate = d3.nest()
-                    .key(function(d) {
+                    .key(function (d) {
                         return d3.timeDay(d.time); // Group by date
                     })
-                    .rollup(function(leaves) {
+                    .rollup(function (leaves) {
                         return leaves.length; // Count the number of leaves
                     })
                     .entries(data);
-            
+
                 // Sort data by date
-                dataByDate.sort(function(a, b) {
+                dataByDate.sort(function (a, b) {
                     return d3.ascending(new Date(a.key), new Date(b.key));
                 });
-            
+
                 // Create an SVG element inside the 'graph-container' div
                 var svg = d3.select("#graph-container")
                     .append("svg")
                     .attr("width", width + margin.left + margin.right) // Include margin in width
                     .attr("height", height + margin.top + margin.bottom); // Include margin in height
-            
+
                 // Create a group for the main chart
                 var chart = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
+
                 // Define scales and axes
                 var xScale = d3.scaleBand()
-                    .domain(dataByDate.map(function(d) { return new Date(d.key); })) // Use all dates as domain
+                    .domain(dataByDate.map(function (d) { return new Date(d.key); })) // Use all dates as domain
                     .range([0, width]) // Adjusted for margin
                     .padding(0.1); // Adjust the padding between bars as needed
-            
+
                 var yScale = d3.scaleLinear()
-                    .domain([0, d3.max(dataByDate, function(d) { return d.value; })])
+                    .domain([0, d3.max(dataByDate, function (d) { return d.value; })])
                     .range([height, 0]); // Adjusted for margin
 
 
 
                 var n;
                 var totalDays = getTotalUniqueDays(data);
-                if (totalDays > 10){
+                if (totalDays > 10) {
                     n = everyNthDate(totalDays); // shows every nth day - adjust as needed
                 } else {
                     n = 1;
                 }
-            
+
                 var xAxis = d3.axisBottom(xScale)
-                    .tickFormat(function(d, i) {
+                    .tickFormat(function (d, i) {
                         if (i % n === 0) {
                             var formatDate = d3.timeFormat("%a %b %d");
                             return formatDate(d);
@@ -268,18 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 var yAxis = d3.axisLeft(yScale);
-            
+
                 // Create bars
                 chart.selectAll(".bar")
                     .data(dataByDate)
                     .enter().append("rect")
                     .attr("class", "bar")
-                    .attr("x", function(d) { return xScale(new Date(d.key)); })
-                    .attr("y", function(d) { return yScale(d.value); })
+                    .attr("x", function (d) { return xScale(new Date(d.key)); })
+                    .attr("y", function (d) { return yScale(d.value); })
                     .attr("width", xScale.bandwidth())
-                    .attr("height", function(d) { return height - yScale(d.value); })
+                    .attr("height", function (d) { return height - yScale(d.value); })
                     .attr("fill", "#54B4D3");
-            
+
                 // Add x and y axes
                 chart.append("g")
                     .attr("class", "x-axis")
@@ -288,19 +288,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     .selectAll("text")
                     .attr("transform", "rotate(-45)")
                     .style("text-anchor", "end");
-            
+
                 chart.append("g")
                     .attr("class", "y-axis")
                     .call(yAxis);
             }
-            
-            
-            
 
-            function removeGraph(){
+
+
+
+            function removeGraph() {
                 d3.select("#graph-container").selectAll("*").remove();
             }
-            
+
 
 
 
