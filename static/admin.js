@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 type: 'GET',
                                 success: function (data) {
                                     var studentData = data;
-                                    console.log(studentData);
+                                    //console.log(studentData);
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 type: 'GET',
                                 success: function (data) {
                                     var teacherData = data;
-                                    console.log(teacherData);
+                                    //console.log(teacherData);
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
@@ -175,11 +175,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     $('.student-profile').append(profileHtml);
                 }
             }
+
+            function getTotalUniqueDays(data) {
+                var uniqueDates = {}; // Object to store unique dates as keys
+            
+                // Iterate through the data and record unique dates
+                data.forEach(function(d) {
+                    // Format the date as YYYY-MM-DD to make it unique
+                    var dateKey = d.time.toISOString().split('T')[0];
+                    uniqueDates[dateKey] = true; // Store unique dates as keys
+                });
+            
+                // Calculate the count of unique dates
+                var count = Object.keys(uniqueDates).length;
+            
+                return count;
+            }
+
+            function everyNthDate(totalDays) {
+                return Math.floor(totalDays / 10);
+
+            }
             
 
             
             function makeGraph(data) {
-                var margin = { top: 20, right: 20, bottom: 25, left: 25 };
+                var margin = { top: 20, right: 20, bottom: 60, left: 25 };
                 var width = 600 - margin.left - margin.right;
                 var height = 300 - margin.top - margin.bottom;
             
@@ -222,12 +243,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 var yScale = d3.scaleLinear()
                     .domain([0, d3.max(dataByDate, function(d) { return d.value; })])
                     .range([height, 0]); // Adjusted for margin
+
+
+
+                var n;
+                var totalDays = getTotalUniqueDays(data);
+                if (totalDays > 10){
+                    n = everyNthDate(totalDays); // shows every nth day - adjust as needed
+                } else {
+                    n = 1;
+                }
             
                 var xAxis = d3.axisBottom(xScale)
-                    .tickFormat(function(d) {
-                        var formatDate = d3.timeFormat("%a %b %d");
-                        return formatDate(d);
-                    });
+                    .tickFormat(function(d, i) {
+                        if (i % n === 0) {
+                            var formatDate = d3.timeFormat("%a %b %d");
+                            return formatDate(d);
+                        } else {
+                            return ""; // Hide labels for other days
+                        }
+                    })
+                    .tickPadding(10) // Add padding as needed
+                    .tickSize(5); // Add a tick size for better visibility
 
 
                 var yAxis = d3.axisLeft(yScale);
@@ -247,7 +284,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 chart.append("g")
                     .attr("class", "x-axis")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
+                    .call(xAxis)
+                    .selectAll("text")
+                    .attr("transform", "rotate(-45)")
+                    .style("text-anchor", "end");
             
                 chart.append("g")
                     .attr("class", "y-axis")

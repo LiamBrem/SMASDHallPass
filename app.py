@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, redirect, session, u
 import sqlite3
 from datetime import datetime, timedelta
 from config import DEBUG
+import random
 
 app = Flask(__name__)
 app.secret_key = "asdf"  # Needed to encrypt session data
@@ -299,28 +300,21 @@ def testFunction(student_id):
     conn, cursor = get_db_connection()
 
     # Query student_history with student names
-    cursor.execute(
-        """
-        SELECT sh.id, sh.locationGoingTo, sh.timeLeft, s.studentName, sh.teacher
-        FROM student_history sh
-        INNER JOIN students s ON sh.student_id = s.id
-        WHERE sh.student_id = ?
-    """,
-        (student_id,),
-    )
-    history_rows = cursor.fetchall()
+    conn, cursor = get_db_connection()
 
-    conn.close()
+    received_location = "bathrooom"
+    teacher = "HBeck"
+    current_time = datetime.now()
 
-    if history_rows:
-        print(f"Student History for Student ID {student_id}:")
-        for row in history_rows:
-            history_id, location, time, student_name, teacher = row
-            print(
-                f"History ID: {history_id}, Student Name: {student_name}, Location: {location}, Time: {time}, Teacher: {teacher}"
+    for i in range(50):
+        diff = timedelta(days=i)
+        for j in range(random.randint(1,4)):
+            # Update the student's location, time they left, and what teacher in the database
+            cursor.execute(
+                "INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)",
+                (1, received_location, current_time + diff, teacher),
             )
-    else:
-        print("No history found for the student.")
+            conn.commit()
 
 
 if __name__ == "__main__" and DEBUG:
