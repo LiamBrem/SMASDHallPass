@@ -299,7 +299,7 @@ def testFunction(student_id):
     # Query student_history with student names
     conn, cursor = get_db_connection()
 
-    received_location = "bathrooom"
+    received_location = "bathroom"
     teacher = "HBeck"
     current_time = datetime.now()
 
