@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-            function formatDateTime(dateTime) {
+            function formatDateTime(dateTime) { 
                 // Check if dateTime is a Date object
                 if (dateTime instanceof Date) {
                     // Extract date and time components

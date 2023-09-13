@@ -175,6 +175,9 @@ def add_location():
     if student:
         # current timestamp
         current_time = datetime.now()
+        time_difference = timedelta(hours=4)
+        current_time -= time_difference # we have to set it 4 hours behind because current time is 4 hours ahead in python anywhere
+
 
         # Update the student's location, time they left, and what teacher in the database
         cursor.execute(
