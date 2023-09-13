@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = "asdf"  # Needed to encrypt session data
 
 # Configuration for serving static files
-app.static_folder = 'static'
+app.static_folder = "static"
 
 
 # connects to db -> returns conn, cursor
@@ -124,8 +124,7 @@ def send_name():
     student = cursor.fetchone()
 
     if student:  # If student exists in the DB
-
-        # Commented out for development purposes 
+        # Commented out for development purposes
         '''
         # Check if it has been 5 minutes since the latest addition to the database
         cursor.execute(
@@ -149,13 +148,12 @@ def send_name():
         else:
             return "No history found for this student."
         '''
-       
 
-        ### REMOVE IN PROD 
+        ### REMOVE IN PROD
         # stores student data in session
         session["student"] = student
         return "success"
-        
+
     else:
         print("student not found")
         return "Student not found."
@@ -177,8 +175,7 @@ def add_location():
         # current timestamp
         current_time = datetime.now()
         time_difference = timedelta(hours=4)
-        current_time -= time_difference # we have to set it 4 hours behind because current time is 4 hours ahead in python anywhere
-
+        current_time -= time_difference  # we have to set it 4 hours behind because current time is 4 hours ahead in python anywhere
 
         # Update the student's location, time they left, and what teacher in the database
         cursor.execute(
@@ -308,7 +305,7 @@ def testFunction(student_id):
 
     for i in range(50):
         diff = timedelta(days=i)
-        for j in range(random.randint(1,4)):
+        for j in range(random.randint(1, 4)):
             # Update the student's location, time they left, and what teacher in the database
             cursor.execute(
                 "INSERT INTO student_history (student_id, locationGoingTo, timeLeft, teacher) VALUES (?, ?, ?, ?)",
@@ -320,4 +317,4 @@ def testFunction(student_id):
 if __name__ == "__main__" and DEBUG:
     app.run()
 
-#testing
+# testing
