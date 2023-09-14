@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mainName = dataList[0].student_name;
                     cardName = "teacher";
                     makeGraph(dataList.slice().reverse());
-                    makeGraph2(dataList.slice().reverse());
+                    makeGraph2(dataList);
 
                 } else {
                     mainName = dataList[0].teacher;
@@ -295,7 +295,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     .call(yAxis);
             }
 
-            function makeGraph2(data){
+            function makeGraph2(data) {
+                // Sort the data by timestamp in descending order to get the most recent leaves
+                //data.sort((a, b) => b.timestamp - a.timestamp);
+                // Take the first 50 entries if there are more than 50, otherwise use all of them
+                data = data.slice(0, Math.min(data.length, 50));
+            
                 // Create an object to store the count of each location
                 var locationCounts = {
                     bathroom: 0,
@@ -304,16 +309,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     teacher: 0,
                     other: 0
                 };
-
+            
                 // Count the number of times a student has been to each location
                 data.forEach(function (d) {
                     var location = d.location.toLowerCase(); // Convert to lowercase for consistency
-                    console.log(location);
                     if (location in locationCounts) {
                         locationCounts[location]++;
                     }
                 });
-
+            
                 // Convert locationCounts object to an array of objects
                 var locationData = Object.keys(locationCounts).map(function (location) {
                     return {
@@ -321,64 +325,64 @@ document.addEventListener("DOMContentLoaded", () => {
                         count: locationCounts[location]
                     };
                 });
-
+            
                 // Set up the dimensions and margins
-                var margin = { top: 20, right: 20, bottom: 60, left: 40 };
+                var margin = { top: 20, right: 20, bottom: 20, left: 60 };
                 var width = 600 - margin.left - margin.right;
                 var height = 300 - margin.top - margin.bottom;
-
+            
                 // Create an SVG element inside the 'graph-container2' div
                 var svg = d3.select("#graph-container2")
                     .append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom);
-
+            
                 // Create a group for the main chart
                 var chart = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+            
                 // Define scales and axes
-                var xScale = d3.scaleBand()
-                    .domain(locationData.map(function (d) { return d.location; }))
-                    .range([0, width])
-                    .padding(0.1);
-
-                var yScale = d3.scaleLinear()
+                var xScale = d3.scaleLinear()
                     .domain([0, d3.max(locationData, function (d) { return d.count; })])
-                    .range([height, 0]);
-
+                    .range([0, width]);
+            
+                var yScale = d3.scaleBand()
+                    .domain(locationData.map(function (d) { return d.location; }))
+                    .range([0, height])
+                    .padding(0.1);
+            
                 var xAxis = d3.axisBottom(xScale);
                 var yAxis = d3.axisLeft(yScale);
-
+            
                 // Create bars
                 chart.selectAll(".bar")
                     .data(locationData)
                     .enter().append("rect")
                     .attr("class", "bar")
-                    .attr("x", function (d) { return xScale(d.location); })
-                    .attr("y", function (d) { return yScale(d.count); })
-                    .attr("width", xScale.bandwidth())
-                    .attr("height", function (d) { return height - yScale(d.count); })
+                    .attr("x", 0)
+                    .attr("y", function (d) { return yScale(d.location); })
+                    .attr("width", function (d) { return xScale(d.count); })
+                    .attr("height", yScale.bandwidth())
                     .attr("fill", "#54B4D3");
-
+            
                 // Add x and y axes
                 chart.append("g")
                     .attr("class", "x-axis")
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis);
-
+            
                 chart.append("g")
                     .attr("class", "y-axis")
                     .call(yAxis);
-
             }
+            
 
 
 
 
             function removeGraph() {
                 d3.select("#graph-container").selectAll("*").remove();
-                d3.select("#graph2-container").selectAll("*").remove();
+                d3.select("#graph-container2").selectAll("*").remove();
             }
 
 
@@ -395,12 +399,12 @@ document.addEventListener("DOMContentLoaded", () => {
             mode = "student";
             allPeople = listOfStudentNames;
             navigateButton.textContent = "Search by Teacher Instead"
-            searchInput.placeholder = "Type Student Name..."
+            searchInput.placeholder = "✏️ Type Student Name..."
         } else {
             mode = "teacher";
             allPeople = listOfTeacherNames;
             navigateButton.textContent = "Search by Student Instead"
-            searchInput.placeholder = "Type Teacher Name..."
+            searchInput.placeholder = "👤 Type Teacher Name..."
         }
     });
 });
