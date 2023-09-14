@@ -3,7 +3,7 @@ from PIL import Image
 import os
 
 # Base URL - Will need changed once we get domain
-base_url = "127.0.0.1:5000/"
+base_url = "https://liambrem.pythonanywhere.com/"
 
 # Specify the directory to save the QR code images
 save_directory = "/Desktop/QR"
@@ -12,12 +12,13 @@ save_directory = "/Desktop/QR"
 with open("names/allTeachers.txt", "r") as file:
     listOfNames = file.readlines()
 
+
 # Generate and save QR codes
 for name in listOfNames:
     name = name.strip()
 
     # Combine the base URL and the name
-    full_url = base_url + name
+    full_url = base_url + "teacher/" + name
     
     # Create a QR code instance
     qr = qrcode.QRCode(
@@ -38,10 +39,14 @@ for name in listOfNames:
     save_path = os.path.join(save_directory, f"qrcode_{name}.png")
     
     # Save the image
-    img.save(save_path)
+    #img.save(save_path)
 
     # Display the image (optional)
     img.show()
+
+
+
+    
 
 
 
