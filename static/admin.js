@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 type: 'GET',
                                 success: function (data) {
                                     var studentData = data;
-                                    //console.log(studentData);
+                                    console.log(studentData);
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 type: 'GET',
                                 success: function (data) {
                                     var teacherData = data;
-                                    //console.log(teacherData);
+                                    console.log(teacherData);
                                     // Do something with the data in your frontend
                                     //$('#result').text(myJavaScriptVariable);
 
@@ -400,6 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
             allPeople = listOfStudentNames;
             navigateButton.textContent = "Search by Teacher Instead"
             searchInput.placeholder = "✏️ Type Student Name..."
+            
         } else {
             mode = "teacher";
             allPeople = listOfTeacherNames;

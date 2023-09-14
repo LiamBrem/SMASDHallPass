@@ -124,38 +124,30 @@ def send_name():
     student = cursor.fetchone()
 
     if student:  # If student exists in the DB
-        # Commented out for development purposes
-        '''
         # Check if it has been 5 minutes since the latest addition to the database
         cursor.execute(
             """
             SELECT MAX(timeLeft) FROM student_history
             WHERE student_id = ?""",
-            (student[0],)
+            (student[0],),
         )
         latest_timestamp = cursor.fetchone()[0]
 
         if latest_timestamp:
-            latest_timestamp = datetime.strptime(latest_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+            latest_timestamp = datetime.strptime(latest_timestamp, "%Y-%m-%d %H:%M:%S")
             current_time = datetime.now()
+            # set current_time to be 4 hours behind because current time is 4 hours ahead in python anywhere
+            time_difference = timedelta(hours=4)
+            current_time -= time_difference
+            # If it has been over five minutes since the latest addition, store student data in session
             if current_time - latest_timestamp > timedelta(minutes=5):
-                # If it has been more than 5 minutes, store student data in session
                 session["student"] = student
                 return "success"
             else:
-                print("not 5 minutes")
                 return "It has not been 5 minutes since the latest addition."
         else:
             return "No history found for this student."
-        '''
-
-        ### REMOVE IN PROD
-        # stores student data in session
-        session["student"] = student
-        return "success"
-
     else:
-        print("student not found")
         return "Student not found."
 
 
