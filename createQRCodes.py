@@ -43,12 +43,3 @@ for name in listOfNames:
 
     # Display the image (optional)
     img.show()
-
-
-
-    
-
-
-
-
-
