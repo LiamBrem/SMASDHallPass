@@ -132,6 +132,8 @@ def send_name():
             (student[0],),
         )
         latest_timestamp = cursor.fetchone()[0]
+        #remove decimal from latest_timestamp
+        latest_timestamp = str(latest_timestamp).split(".")[0]
 
         if latest_timestamp:
             latest_timestamp = datetime.strptime(latest_timestamp, "%Y-%m-%d %H:%M:%S")
@@ -144,6 +146,7 @@ def send_name():
                 session["student"] = student
                 return "success"
             else:
+                print("It has not been 5 minutes since the latest addition.")
                 return "It has not been 5 minutes since the latest addition."
         else:
             return "No history found for this student."
