@@ -1,9 +1,3 @@
-Digital Hall Pass
+Digital Hall Pass Used for HS
 
-Current domain: https://liambrem.pythonanywhere.com
-Hosted On PythonAnywhere
-
-go to /admin to look at data
-
-To activate venv -> source venv/bin/activate
-
+This is a just a copy of the running repo
